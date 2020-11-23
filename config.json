@@ -1,0 +1,34 @@
+{
+
+  "faults": [
+    {
+      "id": "00",
+      "name": "fault_probability",
+      "value" : 0.7,
+      "description" : "Inietta l'errore con probabilità settata al valore value"
+    },
+
+    {
+      "id": "01",
+      "name": "fault_interval",
+      "value" : 10,
+      "descripton" : "Specifica l'intervallo tra gli errori in secondi"
+    },
+
+    {
+      "id": "02",
+      "name": "fail_futex",
+      "value" : 0,
+      "descripton" : "Il valore predefinito è 0, impostato su 1 disabilita l'iniezione dei fault' "
+    },
+
+    {
+      "id": "03",
+      "name": "fail_function",
+      "value" : "",
+      "descripton" : "Specifica il nome della funzione nella quale iniettare errori "
+    }
+
+    ]
+}
+
