@@ -1,34 +1,66 @@
 {
-
-  "faults": [
+  "globals":
     {
-      "id": "00",
-      "name": "fault_probability",
-      "value" : 0.7,
-      "description" : "Inietta l'errore con probabilità settata al valore value"
+		"user_activity": false,
+		"time_interval": 90,
+		"fail_futex": [{"id":0,"fail_futex":0  }, {"id":1, "fail_futex":0}, {"id":2, "fail_futex":1}, {"id":3, "fail_futex":1}],
+		"timing": 0,
+		"disk_image": "prova.img"
+
     },
 
-    {
-      "id": "01",
-      "name": "fault_interval",
-      "value" : 10,
-      "descripton" : "Specifica l'intervallo tra gli errori in secondi"
+  "user_activity":
+  [
+	{
+	  "id":0,
+	  "type": "CREATE_FILES",
+	  "tasks": 2,
+	  "star_time": 0,
+	  "end_time": 60,
+	  "average_size": 1024
     },
-
     {
-      "id": "02",
-      "name": "fail_futex",
-      "value" : 0,
-      "descripton" : "Il valore predefinito è 0, impostato su 1 disabilita l'iniezione dei fault' "
-    },
-
-    {
-      "id": "03",
-      "name": "fail_function",
-      "value" : "",
-      "descripton" : "Specifica il nome della funzione nella quale iniettare errori "
+	  "id":1,
+	  "type": "CREATE_DIR",
+	  "tasks": 1,
+	  "star_time": 0,
+	  "end_time": 60,
+	  "average_size": 1024
     }
 
-    ]
+  ],
+
+
+  "injections":
+  [
+
+    {
+      "id": 2,
+      "type": "super_block_corruption",
+      "parameters": {"random_block":false, "bytes":1024, "count": 1, "seek": 1 },
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time:": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value"
+
+    },
+
+    {
+      "id": 3,
+      "type": "super_block_corruption",
+      "parameters": {"random_block":true, "block_list": []},
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time:": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value"
+    }
+
+  ]
 }
 
