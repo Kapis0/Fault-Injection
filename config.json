@@ -50,7 +50,7 @@
 
     {
       "id": 3,
-      "type": "super_block_corruption",
+      "type": "super_block_corruption_random",
       "parameters": {"random_block":true, "block_list": []},
       "fault_probability": 0.7,
       "time_interval": 10,
@@ -63,4 +63,6 @@
 
   ]
 }
+
+
 
