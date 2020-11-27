@@ -1,9 +1,14 @@
 {
   "globals":
     {
-		"user_activity": false,
+		"user_activity": true,
 		"time_interval": 90,
-		"fail_futex": [{"id":0,"fail_futex":0  }, {"id":1, "fail_futex":0}, {"id":2, "fail_futex":1}, {"id":3, "fail_futex":1}],
+		"fail_futex": [{"id":0,"fail_futex":1},
+                        {"id":1, "fail_futex":0},
+                        {"id":2, "fail_futex":0},
+                        {"id":3, "fail_futex":0},
+                        {"id":4, "fail_futex":0},
+                        {"id":5, "fail_futex":1}],
 		"timing": 0,
 		"disk_image": "prova.img"
 
@@ -44,13 +49,26 @@
       "start_time": 0,
       "end_time:": 30,
 
-      "description" : "Inietta l'errore con probabilità settata al valore value"
+      "description" : "Inietta l'errore con probabilità settata al valore value "
 
     },
 
     {
       "id": 3,
       "type": "super_block_corruption_random",
+      "parameters": {"random_block":true, "bytes":[576, 640, 768, 896, 924], "count": 1, "seek": 1},
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time:": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value in maniera random nel superblocco"
+    },
+
+    {
+      "id": 4,
+      "type": "i-node_corruption",
       "parameters": {"random_block":true, "block_list": []},
       "fault_probability": 0.7,
       "time_interval": 10,
@@ -58,11 +76,22 @@
       "start_time": 0,
       "end_time:": 30,
 
-      "description" : "Inietta l'errore con probabilità settata al valore value"
+      "description" : "Inietta l'errore con probabilità settata al valore value nell'i-node"
+    },
+
+    {
+      "id": 5,
+      "type": "direct_block_corruption",
+      "parameters": {"random_block":true, "block_list": []}, 
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time:": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value nell'i-node"
     }
 
   ]
 }
-
-
 
