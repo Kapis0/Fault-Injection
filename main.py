@@ -1,6 +1,8 @@
 import os
 import json
 import random
+import pyfiglet
+import time
 
 # READ JSON
 JSON_FILE = open('config.json', 'r')
@@ -66,9 +68,9 @@ class Path:
                 file.write("This is file {}\n".format(item))
         print("\n*** Creation of the " + str(USR[0].get("tasks")) + " files ***")
 
-    def remove_files(self):
+    def remove_files(self, path):
         for item in range(0, USR[0].get("tasks")):
-            with open("" + self.path + "/file{}.txt".format(item), "r"):
+            with open("" + path + "/file{}.txt".format(item), "r"):
                 os.remove("" + self.path + "/file{}.txt".format(item))
         print("\n*** Removing files ***")
 
@@ -190,16 +192,22 @@ class InjectionID(Inode, Partition):
         Partition.umount_mount(self)
         os.system("cat /mnt/file0.txt /mnt/file1.txt")
 
+def font(text):
+    # Instance of Figlet with font settings
+    cool_text = pyfiglet.Figlet(font="slant")
+    return str(cool_text.renderText(text))
 
 if __name__ == '__main__':
 
+    print(font("Fault_Injection"))
+    time.sleep(3)
     p = Partition(DEV_USB, PARENT_DIR)
     p_dir1 = Partition(DEV_USB, PATH_DIR1)
 
     if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1:
         ev0 = Event(USR[0].get("type"), USR[0].get("id"))
         p.umount_mount()
-        p.remove_files()
+        #p.remove_files(PARENT_DIR)
         p.create_files(PARENT_DIR)
         INODE_FILE = os.stat(PATH_FILE0).st_ino
         print(ev0)
