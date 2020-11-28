@@ -3,19 +3,19 @@ import json
 import random
 
 # READ JSON
-myjsonfile = open('config.json', 'r')
-data = myjsonfile.read()
-obj = json.loads(data)
-glo = obj['globals']
-fut = glo['fail_futex']
-usr = obj['user_activity']
-injs = obj['injections']
-par2 = [injs[0].get("parameters")]
-par3 = [injs[1].get("parameters")]
-BYTE_ALL = par2[0].get("bytes")
-BYTE_RAND = random.choice(par3[0].get("bytes"))
-COUNT = par2[0].get("count")
-SEEK = par2[0].get("seek")
+JSON_FILE = open('config.json', 'r')
+DATA = JSON_FILE.read()
+OBJECT = json.loads(DATA)
+GLOBALS = OBJECT['globals']
+FUTEX = GLOBALS['fail_futex']
+USR = OBJECT['user_activity']
+INJECTION = OBJECT['injections']
+PAR_SB_ALL = [INJECTION[0].get("parameters")]
+PAR_SB_RAND = [INJECTION[1].get("parameters")]
+BYTE_ALL = PAR_SB_ALL[0].get("bytes")
+BYTE_RAND = random.choice(PAR_SB_RAND[0].get("bytes"))
+COUNT = PAR_SB_ALL[0].get("count")
+SEEK = PAR_SB_ALL[0].get("seek")
 
 list_event = []
 
@@ -55,13 +55,13 @@ class Path:
         self.path = path
 
     def create_files(self, path):
-        for item in range(0, usr[0].get("tasks")):
+        for item in range(0, USR[0].get("tasks")):
             with open("" + path + "/file{}.txt".format(item), "w") as file:
                 file.write("This is file {}\n".format(item))
-        print("\n*** Creation of the " + str(usr[0].get("tasks")) + " files ***")
+        print("\n*** Creation of the " + str(USR[0].get("tasks")) + " files ***")
 
     def remove_files(self):
-        for item in range(0, usr[0].get("tasks")):
+        for item in range(0, USR[0].get("tasks")):
             with open("" + self.path + "/file{}.txt".format(item), "r"):
                 os.remove("" + self.path + "/file{}.txt".format(item))
         print("\n*** Removing files ***")
@@ -190,39 +190,39 @@ if __name__ == '__main__':
     p = Partition(DEV_USB, PARENT_DIR)
     p_dir1 = Partition(DEV_USB, PATH_DIR1)
 
-    if glo.get("user_activity") is True and fut[0].get("fail_futex") == 1:
-        ev0 = Event(usr[0].get("type"), usr[0].get("id"))
+    if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1:
+        ev0 = Event(USR[0].get("type"), USR[0].get("id"))
         p.umount_mount()
         p.remove_files()
         p.create_files(PARENT_DIR)
         INODE_FILE = os.stat(PATH_FILE0).st_ino
         print(ev0)
 
-    if glo.get("user_activity") is True and fut[1].get("fail_futex") == 1:
-        ev1 = Event(usr[1].get("type"), usr[1].get("id"))
+    if GLOBALS.get("user_activity") is True and FUTEX[1].get("fail_futex") == 1:
+        ev1 = Event(USR[1].get("type"), USR[1].get("id"))
         p.umount_mount()
         p_dir1.remove_directory(PATH_DIR1)
         p_dir1.create_directory(PATH_DIR1)
         INODE_DIR1 = os.stat(PATH_DIR1).st_ino
         print(ev1)
 
-    if fut[2].get("fail_futex") == 1:
-        ev2 = Event(injs[0].get("type"), injs[0].get("id"))
+    if FUTEX[2].get("fail_futex") == 1:
+        ev2 = Event(INJECTION[0].get("type"), INJECTION[0].get("id"))
         list_event.append(ev2.to_string())
         print(ev2)
 
-    if fut[3].get("fail_futex") == 1:
-        ev3 = Event(injs[1].get("type"), injs[1].get("id"))
+    if FUTEX[3].get("fail_futex") == 1:
+        ev3 = Event(INJECTION[1].get("type"), INJECTION[1].get("id"))
         list_event.append(ev3.to_string())
         print(ev3)
 
-    if fut[4].get("fail_futex") == 1:
-        ev4 = Event(injs[2].get("type"), injs[2].get("id"))
+    if FUTEX[4].get("fail_futex") == 1:
+        ev4 = Event(INJECTION[2].get("type"), INJECTION[2].get("id"))
         list_event.append(ev4.to_string())
         print(ev4)
 
-    if fut[5].get("fail_futex") == 1:
-        ev5 = Event(injs[3].get("type"), injs[3].get("id"))
+    if FUTEX[5].get("fail_futex") == 1:
+        ev5 = Event(INJECTION[3].get("type"), INJECTION[3].get("id"))
         list_event.append(ev5.to_string())
         print(ev5)
 
@@ -255,31 +255,30 @@ if __name__ == '__main__':
 
 
     while len(list_event) != 0:
-        if fut[2].get("fail_futex") == 1:
+        if FUTEX[2].get("fail_futex") == 1:
             if list_event[0] == ev2.to_string():
                 print("\n *** Injection into all bytes of the supeblock")
                 fault = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_ALL, COUNT, SEEK)
                 fault.injection_superblock()
                 list_event.remove(ev2.to_string())
 
-        if fut[3].get("fail_futex") == 1:
+        if FUTEX[3].get("fail_futex") == 1:
             if list_event[0] == ev3.to_string():
                 print("\n *** Random injection of " + str(BYTE_RAND) + " bytes")
                 fault_rand = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_RAND, COUNT, SEEK)
                 fault_rand.injection_superblock()
                 list_event.remove(ev3.to_string())
 
-        if glo.get("user_activity") is True and fut[0].get("fail_futex") == 1 and fut[1].get("fail_futex") == 1 and fut[4].get("fail_futex") == 1:
+        if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1 and FUTEX[1].get("fail_futex") == 1 and FUTEX[4].get("fail_futex") == 1:
             if list_event[0] == ev4.to_string():
                 print("*** I-node injection ***")
                 fault_inode = InjectionID(DEV_USB, PARENT_DIR, INODE_DIR1, PATH_DIR1, PATH_LOST)
                 fault_inode.injection_inode()
                 list_event.remove(ev4.to_string())
 
-        if glo.get("user_activity") is True and fut[0].get("fail_futex") == 1 and fut[5].get("fail_futex") == 1:
+        if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1 and FUTEX[5].get("fail_futex") == 1:
             if list_event[0] == ev5.to_string():
                 fault_directblock = InjectionID(DEV_USB, PARENT_DIR, INODE_FILE, None, None)
                 fault_directblock.injection_directblock()
                 list_event.remove(ev5.to_string())
-
 
