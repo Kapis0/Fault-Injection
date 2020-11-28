@@ -5,6 +5,8 @@ import random
 # READ JSON
 JSON_FILE = open('config.json', 'r')
 DATA = JSON_FILE.read()
+
+# PARSE
 OBJECT = json.loads(DATA)
 GLOBALS = OBJECT['globals']
 FUTEX = GLOBALS['fail_futex']
@@ -12,17 +14,19 @@ USR = OBJECT['user_activity']
 INJECTION = OBJECT['injections']
 PAR_SB_ALL = [INJECTION[0].get("parameters")]
 PAR_SB_RAND = [INJECTION[1].get("parameters")]
+
+# SUPERBLOCK PARAMETERS
 BYTE_ALL = PAR_SB_ALL[0].get("bytes")
 BYTE_RAND = random.choice(PAR_SB_RAND[0].get("bytes"))
 COUNT = PAR_SB_ALL[0].get("count")
 SEEK = PAR_SB_ALL[0].get("seek")
 
-list_event = []
-
+# DEVICE
 DEV_USB = "/dev/sdb1"
 DEV_ZERO = "/dev/zero"
 DEV_RANDOM = "/dev/urandom"
 
+# DIRECTORY AND PATH
 PARENT_DIR = "/mnt"
 DIR1 = "dir1"
 FILE0 = "file0.txt"
@@ -31,6 +35,8 @@ PATH_DIR1 = os.path.join(PARENT_DIR, DIR1)  # /mnt/dir1
 PATH_LOST = os.path.join(PARENT_DIR, LOST_FOUND)  # /mnt/lost+found
 PATH_FILE0 = os.path.join(PARENT_DIR, FILE0)  # /mnt/file0.txt
 
+# INJECTION LIST
+LIST_EVENT = []
 
 class Device:
 
@@ -208,22 +214,22 @@ if __name__ == '__main__':
 
     if FUTEX[2].get("fail_futex") == 1:
         ev2 = Event(INJECTION[0].get("type"), INJECTION[0].get("id"))
-        list_event.append(ev2.to_string())
+        LIST_EVENT.append(ev2.to_string())
         print(ev2)
 
     if FUTEX[3].get("fail_futex") == 1:
         ev3 = Event(INJECTION[1].get("type"), INJECTION[1].get("id"))
-        list_event.append(ev3.to_string())
+        LIST_EVENT.append(ev3.to_string())
         print(ev3)
 
     if FUTEX[4].get("fail_futex") == 1:
         ev4 = Event(INJECTION[2].get("type"), INJECTION[2].get("id"))
-        list_event.append(ev4.to_string())
+        LIST_EVENT.append(ev4.to_string())
         print(ev4)
 
     if FUTEX[5].get("fail_futex") == 1:
         ev5 = Event(INJECTION[3].get("type"), INJECTION[3].get("id"))
-        list_event.append(ev5.to_string())
+        LIST_EVENT.append(ev5.to_string())
         print(ev5)
 
     while True:
@@ -237,48 +243,45 @@ if __name__ == '__main__':
 
         r = input("\n Do you want inject random? {y,n} ")
         if r == "y":
-            list_event.remove(ev3.to_string())
-            list_event.insert(0, ev3.to_string())
+            LIST_EVENT.remove(ev3.to_string())
+            LIST_EVENT.insert(0, ev3.to_string())
         if r == "n":
-            list_event.remove(ev2.to_string())
-            list_event.insert(0, ev2.to_string())
+            LIST_EVENT.remove(ev2.to_string())
+            LIST_EVENT.insert(0, ev2.to_string())
 
     if num == 2:
-
-        list_event.remove(ev4.to_string())
-        list_event.insert(0, ev4.to_string())
+        LIST_EVENT.remove(ev4.to_string())
+        LIST_EVENT.insert(0, ev4.to_string())
 
     if num == 3:
+        LIST_EVENT.remove(ev5.to_string())
+        LIST_EVENT.insert(0, ev5.to_string())
 
-        list_event.remove(ev5.to_string())
-        list_event.insert(0, ev5.to_string())
-
-
-    while len(list_event) != 0:
+    while len(LIST_EVENT) != 0:
         if FUTEX[2].get("fail_futex") == 1:
-            if list_event[0] == ev2.to_string():
+            if LIST_EVENT[0] == ev2.to_string():
                 print("\n *** Injection into all bytes of the supeblock")
                 fault = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_ALL, COUNT, SEEK)
                 fault.injection_superblock()
-                list_event.remove(ev2.to_string())
+                LIST_EVENT.remove(ev2.to_string())
 
         if FUTEX[3].get("fail_futex") == 1:
-            if list_event[0] == ev3.to_string():
+            if LIST_EVENT[0] == ev3.to_string():
                 print("\n *** Random injection of " + str(BYTE_RAND) + " bytes")
                 fault_rand = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_RAND, COUNT, SEEK)
                 fault_rand.injection_superblock()
-                list_event.remove(ev3.to_string())
+                LIST_EVENT.remove(ev3.to_string())
 
-        if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1 and FUTEX[1].get("fail_futex") == 1 and FUTEX[4].get("fail_futex") == 1:
-            if list_event[0] == ev4.to_string():
+        if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1 and FUTEX[1].get(
+                "fail_futex") == 1 and FUTEX[4].get("fail_futex") == 1:
+            if LIST_EVENT[0] == ev4.to_string():
                 print("*** I-node injection ***")
                 fault_inode = InjectionID(DEV_USB, PARENT_DIR, INODE_DIR1, PATH_DIR1, PATH_LOST)
                 fault_inode.injection_inode()
-                list_event.remove(ev4.to_string())
+                LIST_EVENT.remove(ev4.to_string())
 
         if GLOBALS.get("user_activity") is True and FUTEX[0].get("fail_futex") == 1 and FUTEX[5].get("fail_futex") == 1:
-            if list_event[0] == ev5.to_string():
+            if LIST_EVENT[0] == ev5.to_string():
                 fault_directblock = InjectionID(DEV_USB, PARENT_DIR, INODE_FILE, None, None)
                 fault_directblock.injection_directblock()
-                list_event.remove(ev5.to_string())
-
+                LIST_EVENT.remove(ev5.to_string())
