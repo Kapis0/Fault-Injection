@@ -39,16 +39,16 @@ class Injector(Event):
     injections = None
 
     def inject(self, injections):
-        
+
         self.injections = injections
-       
+
         for injection in injections:
             self.type = injection["type"]
-            
-            if self.type == "superblock_corruption":
+
+            if self.type == "super_block_corruption":
                 fault = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_ALL, COUNT, SEEK)
                 fault.injection_superblock()
-            if self.type == "superblock_corruption_random":
+            if self.type == "super_block_corruption_random":
                 fault_rand = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, BYTE_RAND, COUNT, SEEK)
                 fault_rand.injection_superblock()
             if self.type == "i-node_corruption":
@@ -59,6 +59,7 @@ class Injector(Event):
                 INODE_FILE = os.stat(PATH_FILE0).st_ino
                 fault_directblock = InjectionID(DEV_USB, PARENT_DIR, INODE_FILE, None, None)
                 fault_directblock.injection_directblock()
+
 
 
             
