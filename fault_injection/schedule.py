@@ -69,7 +69,7 @@ class Scheduler(threading.Thread):
                 return self.events_queue.get_nowait()
 
     def next_injection(self):
-        Injector.inject(self.next_event().parameters)
+        Injector.inject(self.next_event().parameters, self.simulation)
 
     def sched_injections_nowait(self):
         while not self.events_queue.empty():
