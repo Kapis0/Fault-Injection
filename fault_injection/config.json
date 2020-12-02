@@ -1,0 +1,97 @@
+{
+  "globals":
+    {
+		"user_activity": true,
+		"time_interval": 90,
+		"fail_futex": [{"id":0,"fail_futex":1},
+                        {"id":1, "fail_futex":1},
+                        {"id":2, "fail_futex":1},
+                        {"id":3, "fail_futex":1},
+                        {"id":4, "fail_futex":1},
+                        {"id":5, "fail_futex":1}],
+		"timing": 0,
+		"disk_image": "prova.img"
+
+    },
+
+  "user_activity":
+  [
+	{
+	  "id":0,
+	  "type": "CREATE_FILES",
+	  "tasks": 2,
+	  "star_time": 0,
+	  "end_time": 60,
+	  "average_size": 1024
+    },
+    {
+	  "id":1,
+	  "type": "CREATE_DIR",
+	  "tasks": 1,
+	  "star_time": 0,
+	  "end_time": 60,
+	  "average_size": 1024
+    }
+
+  ],
+
+
+  "injections":
+  [
+
+    {
+      "id": 2,
+      "type": "super_block_corruption",
+      "parameters": {"random_block":false, "bytes":1024, "count": 1, "seek": 1 },
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value "
+
+    },
+
+    {
+      "id": 3,
+      "type": "super_block_corruption_random",
+      "parameters": {"random_block":true, "bytes":[576, 640, 768, 896, 924], "count": 1, "seek": 1},
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value in maniera random nel superblocco"
+    },
+
+    {
+      "id": 4,
+      "type": "i-node_corruption",
+      "parameters": {"random_block":true, "block_list": []},
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value nell'i-node"
+    },
+
+    {
+      "id": 5,
+      "type": "direct_block_corruption",
+      "parameters": {"random_block":true, "block_list": []},
+      "fault_probability": 0.7,
+      "time_interval": 10,
+      "value" : 0.7,
+      "start_time": 0,
+      "end_time": 30,
+
+      "description" : "Inietta l'errore con probabilità settata al valore value nell'i-node"
+    }
+
+  ]
+}
+
