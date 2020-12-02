@@ -1,4 +1,5 @@
 from fault_injection.configuration import Configuration
+from fault_injection.injector import Injector
 from fault_injection.schedule import Scheduler
 
 if __name__ == "__main__":
