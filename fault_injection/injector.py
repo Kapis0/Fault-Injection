@@ -1,4 +1,4 @@
-from fault_injection.fault import InjectionS, InjectionID
+from fault_injection.main import InjectionS, InjectionID
 from fault_injection.schedule import Event
 
 class Injector(Event):
