@@ -11,3 +11,6 @@ if __name__ == "__main__":
     while ev is not None:
         print(ev)
         ev = sched.next_event()
+        
+    inj = Injector()
+    inj.inject(config.get_injections())
