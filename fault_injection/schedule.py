@@ -1,15 +1,18 @@
 from queue import PriorityQueue
 import random
-
+from fault_injection.injector import Injector
+import threading
+import time
+import logging
 
 class Event:
     occur_time = None
-    type = None
+    e_type = None
     parameters = None
 
     def __init__(self, e_time, e_type, parameters):
         self.occur_time = e_time
-        self.type = e_type
+        self.e_type = e_type
         self.parameters = parameters
         random.seed()
 
@@ -26,12 +29,18 @@ class Event:
         return not self.occur_time == other.occur_time
 
     def __str__(self):
-        return '{"time": ' + str(self.occur_time) + ', "type": "' + self.type + '"}'
+        return '{"time": ' + str(self.occur_time) + ', "type": "' + self.e_type + '"}'
 
 
-class Scheduler:
+class Scheduler(threading.Thread):
     injections = None
     events_queue = None
+    current_time = 0
+    simulation = False
+
+    def __init__(self, simulation=False):
+        threading.Thread.__init__(self)
+        self.simulation = simulation
 
     def load_injections(self, injections):
         self.injections = injections
@@ -58,3 +67,20 @@ class Scheduler:
                 return None
             else:
                 return self.events_queue.get_nowait()
+
+    def next_injection(self):
+        Injector.inject(self.next_event().parameters)
+
+    def sched_injections_nowait(self):
+        while not self.events_queue.empty():
+            self.next_injection()
+
+    def run(self):
+        while not self.events_queue.empty():
+            event = self.next_event()
+            logging.info("next event " + event.e_type + " in " +
+                         str(event.occur_time - self.current_time) + " seconds")
+            time. sleep(event.occur_time - self.current_time)
+            Injector.inject(event.parameters, self.simulation)
+            self.current_time = event.occur_time
+            logging.info("now is " + str(self.current_time))
