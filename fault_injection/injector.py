@@ -9,12 +9,12 @@ class Injector(Event):
     def inject(self, injection):
         self.injection = injection
         
-        if injection["type"] == "superblock_corruption":
+        if self.type == "superblock_corruption":
             InjectionS.injection_superblock(self)
-        if injection["type"] == "superblock_corruption_random":
+        if self.type == "superblock_corruption_random":
             InjectionS.injection_superblock(self)
-        if injection["type"] == "i-node_corruption":
+        if self.type == "i-node_corruption":
             InjectionID.injection_inode(self)
-        if injection["type"] == "direct_block_corruption":
+        if self.type == "direct_block_corruption":
             InjectionID.injection_directblock(self)
             
