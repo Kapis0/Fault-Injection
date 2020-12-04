@@ -7,8 +7,8 @@
                         {"id":1, "fail_futex":1},
                         {"id":2, "fail_futex":1},
                         {"id":3, "fail_futex":1},
-                        {"id":4, "fail_futex":1},
-                        {"id":5, "fail_futex":1}],
+                        {"id":4, "fail_futex":0},
+                        {"id":5, "fail_futex":0}],
 		"timing": 0,
 		"disk_image": "prova.img"
 
@@ -20,16 +20,16 @@
 	  "id":0,
 	  "type": "CREATE_FILES",
 	  "tasks": 2,
-	  "star_time": 0,
-	  "end_time": 60,
+	  "start_time": 0,
+	  "end_time": 10,
 	  "average_size": 1024
     },
     {
 	  "id":1,
 	  "type": "CREATE_DIR",
 	  "tasks": 1,
-	  "star_time": 0,
-	  "end_time": 60,
+	  "start_time": 0,
+	  "end_time": 10,
 	  "average_size": 1024
     }
 
@@ -69,7 +69,7 @@
     {
       "id": 4,
       "type": "i-node_corruption",
-      "parameters": {"random_block":true, "block_list": []},
+      "parameters": {"random_block":false, "block_list": []},
       "fault_probability": 0.7,
       "time_interval": 10,
       "value" : 0.7,
@@ -82,7 +82,7 @@
     {
       "id": 5,
       "type": "direct_block_corruption",
-      "parameters": {"random_block":true, "block_list": []},
+      "parameters": {"random_block":false, "block_list": []},
       "fault_probability": 0.7,
       "time_interval": 10,
       "value" : 0.7,
