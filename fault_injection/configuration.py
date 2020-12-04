@@ -28,3 +28,17 @@ class Configuration:
             if fail_futex[injection['id']] == 1:
                 injections.append(injection)
         return injections
+
+    def get_user_activities(self):
+        if self.jsonObject is None:
+            self.load()
+
+        fail_futex = {}
+        for futex in self.jsonObject["globals"]['fail_futex']:
+            fail_futex[futex['id']] = futex['fail_futex']
+
+        user_activities = []
+        for activity in self.jsonObject["user_activity"]:
+            if fail_futex[activity['id']] == 1:
+                user_activities.append(activity)
+        return user_activities
