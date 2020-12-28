@@ -1,7 +1,7 @@
 from queue import PriorityQueue
 import random
-from fault_injection.injector import Injector
-from fault_injection.user import  User
+from sdinjection.injector import Injector
+from sdinjection.user import  User
 import threading
 import time
 import logging
@@ -85,6 +85,7 @@ class Scheduler(threading.Thread):
             Injector.inject(event.parameters, self.simulation)
             self.current_time = event.occur_time
             logging.info("now is " + str(self.current_time))
+
 
 class Scheduler_User(threading.Thread):
 

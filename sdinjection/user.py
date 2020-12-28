@@ -1,5 +1,5 @@
 import os
-from custom.fault_injection.main import Partition
+from sdinjection.utils import Partition
 
 DEV_USB = "/dev/sdb1"
 PARENT_DIR = "/mnt"

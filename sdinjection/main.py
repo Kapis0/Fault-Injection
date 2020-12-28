@@ -5,7 +5,7 @@ import pyfiglet
 import time
 
 # READ JSON
-JSON_FILE = open('config.json', 'r')
+JSON_FILE = open('../conf/config.json', 'r')
 DATA = JSON_FILE.read()
 
 # PARSE

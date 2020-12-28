@@ -1,7 +1,6 @@
 import os
-import json
 import random
-from fault_injection.main import InjectionS, InjectionID
+from sdinjection.main import InjectionS, InjectionID
 import logging
 
 
