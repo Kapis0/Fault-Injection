@@ -1,6 +1,7 @@
 import os
 import random
-from sdinjection.main import InjectionS, InjectionID
+from main import InjectionS, InjectionID
+from sdinjections.injections import SuperBlockInjection, InodeInjection
 import logging
 
 
@@ -33,12 +34,12 @@ class Injector:
     @staticmethod
     def __simulate(injection):
         if injection["type"] == "super_block_corruption":
-            print ('Injecting: ' + injection["type"] + 'parameters:',DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB,
+            print ('Injecting: ' + injection["type"] + 'parameters:',DEV_USB, DEV_ZERO, DEV_USB,
                    injection["parameters"]["bytes"], injection["parameters"]["count"], injection["parameters"]["seek"])
 
 
         elif injection["type"] == "super_block_corruption_random":
-            print(injection["type"], DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB,
+            print(injection["type"], DEV_USB, DEV_ZERO, DEV_USB,
                   random.choice(injection["parameters"]["bytes"]),
                   injection["parameters"]["count"], injection["parameters"]["seek"])
 
@@ -64,14 +65,14 @@ class Injector:
     def __real_injection(injection):
 
         if injection["type"] == "super_block_corruption":
-            fault = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB, injection["parameters"]["bytes"],
-                               injection["parameters"]["count"], injection["parameters"]["seek"])
-            fault.injection_superblock()
+            fault = SuperBlockInjection(DEV_USB, DEV_ZERO, DEV_USB, injection["parameters"]["bytes"], injection["parameters"]["count"], injection["parameters"]["seek"])
+            fault.inject()
         elif injection["type"] == "super_block_corruption_random":
-            fault_rand = InjectionS(DEV_USB, PARENT_DIR, DEV_ZERO, DEV_USB,
-                                    random.choice(injection["parameters"]["bytes"]),
-                                    injection["parameters"]["count"], injection["parameters"]["seek"])
-            fault_rand.injection_superblock()
+            fault_rand = SuperBlockInjection(DEV_USB, DEV_ZERO, DEV_USB,
+                                             random.choice(injection["parameters"]["bytes"]),
+                                             injection["parameters"]["count"],
+                                             injection["parameters"]["seek"])
+            fault_rand.inject()
         elif injection["type"] == "i-node_corruption":
             INODE_DIR1 = os.stat(PATH_DIR1).st_ino
             fault_inode = InjectionID(DEV_USB, PARENT_DIR, INODE_DIR1, PATH_DIR1, PATH_LOST)
