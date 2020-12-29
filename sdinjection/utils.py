@@ -5,17 +5,28 @@ class Device:
 
     def __init__(self, dev):
         self.dev = dev
+        self.path = None
 
-    def unmounting(self):
+    def unmount(self):
         print("\n*** Unmounting the partition ***")
         os.system("umount " + str(self.dev))
 
-    def formatting(self):
+    def format(self):
         print("\n*** Partition formatting ***")
         os.system("mkfs.ext4 " + self.dev)
 
     def filesystem_check(self):
         os.system("e2fsck " + self.dev)
+
+    def mount(self, path):
+        print("\n*** Mounting " + self.dev + " in " + path + " ***")
+        os.system("mount " + self.dev + " " + path)
+        self.path = path
+
+    def umount_mount(self):
+        if self.path is not None:
+            self.umount()
+            self.mount(self.path)
 
 
 class Path:
@@ -48,16 +59,3 @@ class Path:
         os.system("ls -l " + path)
 
 
-class Partition(Device, Path):
-
-    def __init__(self, dev, path):
-        Device.__init__(self, dev)
-        Path.__init__(self, path)
-
-    def mounting(self):
-        print("\n*** Mounting " + self.dev + " in " + self.path + " ***")
-        os.system("mount " + self.dev + " " + self.path)
-
-    def umount_mount(self):
-        Device.unmounting(self)
-        Partition.mounting(self)
